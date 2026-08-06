@@ -1,37 +1,43 @@
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import * as THREE from "three";
 
 function Galaxy() {
 
   const points = useRef();
 
+  // Detect mobile
+  const isMobile = window.innerWidth < 768;
+
+  // Adaptive particle count
+  const STAR_COUNT = isMobile ? 2500 : 12000;
+
   const particles = useMemo(() => {
 
     const pos = [];
 
-    for(let i=0;i<12000;i++){
+    for (let i = 0; i < STAR_COUNT; i++) {
 
       pos.push(
-        (Math.random()-0.5)*900,
-        Math.random()*450,
-        (Math.random()-0.5)*900
+        (Math.random() - 0.5) * 900,
+        Math.random() * 450,
+        (Math.random() - 0.5) * 900
       );
 
     }
 
     return new Float32Array(pos);
 
-  },[]);
+  }, [STAR_COUNT]);
 
-  useFrame(({clock})=>{
+  useFrame(({ clock }) => {
 
-    points.current.rotation.y =
-      clock.elapsedTime*0.002;
+    if (points.current) {
+      points.current.rotation.y = clock.elapsedTime * 0.002;
+    }
 
   });
 
-  return(
+  return (
 
     <points ref={points}>
 
@@ -39,7 +45,7 @@ function Galaxy() {
 
         <bufferAttribute
           attach="attributes-position"
-          count={particles.length/3}
+          count={particles.length / 3}
           array={particles}
           itemSize={3}
         />
@@ -47,17 +53,11 @@ function Galaxy() {
       </bufferGeometry>
 
       <pointsMaterial
-
-        size={2.8}
-
+        size={isMobile ? 1.4 : 2.8}
         color="#ffffff"
-
         transparent
-
         opacity={1}
-
         sizeAttenuation
-
       />
 
     </points>
