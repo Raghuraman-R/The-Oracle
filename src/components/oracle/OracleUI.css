@@ -1,0 +1,65 @@
+.oracle-title {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+
+    animation: glowPulse 3.5s ease-in-out infinite;
+}
+
+
+.oracle-title::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    left:-180%;
+
+    width:60%;
+
+    background:linear-gradient(
+        110deg,
+        transparent,
+        rgba(255,255,255,.95),
+        rgba(255,240,180,.95),
+        transparent
+    );
+
+    transform:skewX(-25deg);
+
+    animation:shimmer 2.8s ease forwards;
+
+    animation-delay:1.6s;
+
+    pointer-events:none;
+}
+
+@keyframes shimmer{
+
+    from{
+        left:-180%;
+    }
+
+    to{
+        left:220%;
+    }
+
+}
+
+@keyframes glowPulse {
+
+    0%{
+        filter: brightness(1) drop-shadow(0 0 10px rgba(255,220,120,.2));
+    }
+
+    50%{
+        filter: brightness(1.25) drop-shadow(0 0 28px rgba(255,220,120,.55));
+    }
+
+    100%{
+        filter: brightness(1) drop-shadow(0 0 10px rgba(255,220,120,.2));
+    }
+
+}
