@@ -51,7 +51,7 @@ function OracleScene({ onIntroFinished }) {
           antialias: !isMobile,
           powerPreference: "high-performance",
           toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: isMobile ? 0.65 : 0.9,
+          toneMappingExposure: 0.9,
         }}
       >
 
@@ -59,15 +59,11 @@ function OracleScene({ onIntroFinished }) {
 
         <PerspectiveCamera
           makeDefault
-          position={
-            isMobile
-              ? [0, 65, -300]
-              : [0, 54, -185]
-          }
-          fov={isMobile ? 40 : 35}
+          position={[0, 54, -185]}
+          fov={35}
         />
 
-        {/* HDRI only on Desktop */}
+        {/* Desktop HDRI */}
 
         {!isMobile && (
           <Environment
@@ -83,7 +79,7 @@ function OracleScene({ onIntroFinished }) {
         {/* Lights */}
 
         <ambientLight
-          intensity={isMobile ? 0.28 : 0.35}
+          intensity={0.35}
           color="#bfcfff"
         />
 
@@ -95,16 +91,22 @@ function OracleScene({ onIntroFinished }) {
 
         <directionalLight
           position={[35, 45, -80]}
-          intensity={isMobile ? 0.7 : 1.15}
+          intensity={1.15}
           color="#dbe7ff"
           castShadow={!isMobile}
-          shadow-mapSize-width={2048}
-          shadow-mapSize-height={2048}
+          shadow-mapSize-width={isMobile ? 1024 : 4096}
+          shadow-mapSize-height={isMobile ? 1024 : 4096}
+          shadow-camera-near={1}
+          shadow-camera-far={300}
+          shadow-camera-left={-80}
+          shadow-camera-right={80}
+          shadow-camera-top={80}
+          shadow-camera-bottom={-80}
         />
 
         <pointLight
           position={[0, 12, 0]}
-          intensity={isMobile ? 2 : 5}
+          intensity={isMobile ? 2.5 : 6}
           color="#FFD977"
           distance={50}
           decay={2}
@@ -138,9 +140,9 @@ function OracleScene({ onIntroFinished }) {
           }}
         />
 
-        {/* Controls */}
+        {/* Orbit Controls */}
 
-        {!isMobile && controlsEnabled && (
+        {controlsEnabled && (
 
           <OrbitControls
             enablePan={false}
@@ -149,6 +151,12 @@ function OracleScene({ onIntroFinished }) {
             minDistance={15}
             maxDistance={150}
             maxPolarAngle={Math.PI / 2}
+            enableZoom={true}
+            enableRotate={true}
+            touches={{
+              ONE: THREE.TOUCH.ROTATE,
+              TWO: THREE.TOUCH.DOLLY_PAN,
+            }}
           />
 
         )}
@@ -158,7 +166,7 @@ function OracleScene({ onIntroFinished }) {
         <EffectComposer>
 
           <Bloom
-            intensity={isMobile ? 0.35 : 1.15}
+            intensity={isMobile ? 0.45 : 1.15}
             luminanceThreshold={0.72}
             mipmapBlur={!isMobile}
           />
