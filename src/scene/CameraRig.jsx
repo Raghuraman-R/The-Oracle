@@ -1,5 +1,5 @@
 import { useThree, useFrame } from "@react-three/fiber";
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 
 function CameraRig({ onFinish }) {
@@ -15,8 +15,9 @@ function CameraRig({ onFinish }) {
 
     if (isMobile) {
 
-      camera.position.set(0, 70, -320);
-      camera.lookAt(0, 65, -320);
+      // Mobile starts farther away
+      camera.position.set(0, 78, -360);
+      camera.lookAt(0, 72, -350);
 
     } else {
 
@@ -27,31 +28,50 @@ function CameraRig({ onFinish }) {
 
   }, [camera, isMobile]);
 
-  const curve = new THREE.CatmullRomCurve3(
+  const curve = useMemo(() => {
 
-    isMobile
-      ? [
-          new THREE.Vector3(0, 70, -320),
-          new THREE.Vector3(0, 60, -230),
-          new THREE.Vector3(0, 40, -120),
-          new THREE.Vector3(0, 12, 60),
-        ]
-      : [
-          new THREE.Vector3(0, 54, -185),
-          new THREE.Vector3(0, 45, -120),
-          new THREE.Vector3(0, 28, -50),
-          new THREE.Vector3(0, 8, 30),
-        ]
+    if (isMobile) {
 
-  );
+      return new THREE.CatmullRomCurve3([
+
+        // Moon cinematic shot
+        new THREE.Vector3(0, 78, -360),
+
+        // Slow pull
+        new THREE.Vector3(0, 72, -300),
+
+        // Temple reveal
+        new THREE.Vector3(0, 55, -200),
+
+        // Wider temple
+        new THREE.Vector3(0, 35, -80),
+
+        // Final shot
+        new THREE.Vector3(0, 12, 55),
+
+      ]);
+
+    }
+
+    return new THREE.CatmullRomCurve3([
+
+      new THREE.Vector3(0, 54, -185),
+      new THREE.Vector3(0, 45, -120),
+      new THREE.Vector3(0, 28, -50),
+      new THREE.Vector3(0, 8, 30),
+
+    ]);
+
+  }, [isMobile]);
 
   useFrame((state, delta) => {
 
     if (finished.current) return;
 
-    if (state.clock.elapsedTime > 1.5) {
+    // Hold longer on the moon
+    if (state.clock.elapsedTime > 2) {
 
-      progress.current += delta * 0.12;
+      progress.current += delta * 0.085;
 
     }
 
@@ -69,10 +89,10 @@ function CameraRig({ onFinish }) {
     camera.position.copy(curve.getPoint(progress.current));
 
     const moonTarget = isMobile
-      ? new THREE.Vector3(0, 65, -320)
+      ? new THREE.Vector3(0, 72, -350)
       : new THREE.Vector3(0, 55, -220);
 
-    const templeTarget = new THREE.Vector3(0, 5, 0);
+    const templeTarget = new THREE.Vector3(0, 6, 0);
 
     const target = new THREE.Vector3();
 
