@@ -130,41 +130,49 @@ function OracleChallenge({ hero }) {
         }}
       />
 
-      <button
-        onClick={async()=>{
-          fetch("https://the-oracle-9zdh.onrender.com/oracle/guess", {
-            method:"POST",
-            headers:{
-              "Content-Type":"application/json"
-            },
-            body:JSON.stringify({
-              sessionId:quiz.sessionId,
-              guess:guess
-            })
-          });
+     <button
+  onClick={async () => {
+    try {
 
-          const data = await res.json();
+      const res = await fetch("https://the-oracle-9zdh.onrender.com/oracle/guess", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          sessionId: quiz.sessionId,
+          guess: guess
+        })
+      });
 
-          setResult(data);
+      const data = await res.json();
 
-          if(data.correct){
-            setScore(prev=>prev+1);
-          }
-        }}
-        style={{
-          marginTop:"20px",
-          padding:"16px 55px",
-          border:"none",
-          borderRadius:"999px",
-          background:"#D8B44A",
-          cursor:"pointer",
-          fontWeight:"bold",
-          fontSize:"18px"
-        }}
-      >
-        CONSULT
-      </button>
+      console.log("Response:", data);
 
+      setResult(data);
+
+      if (data.correct) {
+        setScore(prev => prev + 1);
+      }
+
+    } catch (err) {
+      console.error(err);
+      alert("Backend error. Check console.");
+    }
+  }}
+  style={{
+    marginTop: "20px",
+    padding: "16px 55px",
+    border: "none",
+    borderRadius: "999px",
+    background: "#D8B44A",
+    cursor: "pointer",
+    fontWeight: "bold",
+    fontSize: "18px"
+  }}
+>
+  CONSULT
+</button>
       {result && (
         <motion.div
           initial={{opacity:0,y:20}}
