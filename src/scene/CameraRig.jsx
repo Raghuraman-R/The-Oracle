@@ -11,26 +11,27 @@ function CameraRig({ onFinish }) {
 
   useLayoutEffect(() => {
 
-    // Same cinematic start for desktop and mobile
+    // Initial cinematic moon shot
     camera.position.set(0, 54, -185);
     camera.lookAt(0, 55, -220);
 
   }, [camera]);
 
+  // Same animation for Desktop & Mobile
   const curve = useMemo(() => {
 
     return new THREE.CatmullRomCurve3([
 
-      // Moon shot
+      // Moon
       new THREE.Vector3(0, 54, -185),
 
-      // Slow pull
+      // Pull back
       new THREE.Vector3(0, 45, -120),
 
       // Temple reveal
       new THREE.Vector3(0, 28, -50),
 
-      // Temple entrance
+      // Final entrance
       new THREE.Vector3(0, 8, 30),
 
     ]);
@@ -41,11 +42,9 @@ function CameraRig({ onFinish }) {
 
     if (finished.current) return;
 
-    // Hold on the moon
+    // Hold the moon shot for a moment
     if (state.clock.elapsedTime > 1.5) {
-
       progress.current += delta * 0.12;
-
     }
 
     if (progress.current >= 1) {
@@ -59,22 +58,14 @@ function CameraRig({ onFinish }) {
 
     }
 
+    // Move camera
     camera.position.copy(curve.getPoint(progress.current));
 
-    const moonTarget = new THREE.Vector3(
-      0,
-      55,
-      -220
-    );
-
-    const templeTarget = new THREE.Vector3(
-      0,
-      5,
-      0
-    );
+    // Smoothly change focus from moon to temple
+    const moonTarget = new THREE.Vector3(0, 55, -220);
+    const templeTarget = new THREE.Vector3(0, 5, 0);
 
     const target = new THREE.Vector3();
-
     target.lerpVectors(
       moonTarget,
       templeTarget,
