@@ -11,7 +11,7 @@ function OracleChallenge({ hero }) {
   const [score, setScore] = useState(0);
 
   async function loadNewMovie() {
-    const res = await fetch(`http://127.0.0.1:8000/oracle/${hero}`);
+    const res = await fetch(`https://the-oracle-9zdh.onrender.com/oracle/${hero}`);
     const data = await res.json();
 
     setQuiz(data);
@@ -132,7 +132,7 @@ function OracleChallenge({ hero }) {
 
       <button
         onClick={async()=>{
-          const res = await fetch("http://127.0.0.1:8000/oracle/guess",{
+          fetch("https://the-oracle-9zdh.onrender.com/oracle/guess", {
             method:"POST",
             headers:{
               "Content-Type":"application/json"
