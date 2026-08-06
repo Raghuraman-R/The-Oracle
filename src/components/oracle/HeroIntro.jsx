@@ -14,15 +14,13 @@ const heroImages = {
 
 export default function HeroIntro({ hero, onFinish }) {
 
+  const isMobile = window.innerWidth < 768;
+
   useEffect(() => {
 
     const timer = setTimeout(() => {
 
-      if (onFinish) {
-
-        onFinish();
-
-      }
+      onFinish?.();
 
     }, 5000);
 
@@ -37,9 +35,7 @@ export default function HeroIntro({ hero, onFinish }) {
         opacity: 1,
         backdropFilter: "blur(24px)",
       }}
-      transition={{
-        duration: 1,
-      }}
+      transition={{ duration: 1 }}
       style={{
         position: "fixed",
         inset: 0,
@@ -52,16 +48,18 @@ export default function HeroIntro({ hero, onFinish }) {
       }}
     >
       <HeroCamera>
+
         <div
           style={{
             position: "relative",
-            width: "420px",
-            height: "580px",
+            width: isMobile ? "90vw" : "420px",
+            height: isMobile ? "70vh" : "580px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
+
           {/* Divine Aura */}
 
           <motion.div
@@ -79,8 +77,8 @@ export default function HeroIntro({ hero, onFinish }) {
             }}
             style={{
               position: "absolute",
-              width: "520px",
-              height: "520px",
+              width: isMobile ? "90vw" : "520px",
+              height: isMobile ? "90vw" : "520px",
               borderRadius: "50%",
               background:
                 "radial-gradient(circle,#FFE082 0%,rgba(255,220,120,.35) 35%,transparent 70%)",
@@ -88,11 +86,7 @@ export default function HeroIntro({ hero, onFinish }) {
             }}
           />
 
-          {/* Crack */}
-
           <HeroCrack />
-
-          {/* Portrait */}
 
           <motion.img
             src={heroImages[hero]}
@@ -105,7 +99,7 @@ export default function HeroIntro({ hero, onFinish }) {
             }}
             animate={{
               opacity: 1,
-              scale: [1.05, 1.08, 1.05],
+              scale: [1.02, 1.05, 1.02],
               rotate: 0,
             }}
             transition={{
@@ -114,7 +108,9 @@ export default function HeroIntro({ hero, onFinish }) {
               repeatType: "mirror",
             }}
             style={{
-              width: "420px",
+              width: isMobile ? "85vw" : "420px",
+              maxHeight: "75vh",
+              objectFit: "contain",
               borderRadius: "24px",
               position: "relative",
               zIndex: 10,
@@ -124,10 +120,10 @@ export default function HeroIntro({ hero, onFinish }) {
                 "0 0 80px rgba(255,220,120,.45)",
             }}
           />
-        </div>
-      </HeroCamera>
 
-      {/* Hero Name */}
+        </div>
+
+      </HeroCamera>
 
       <motion.h1
         initial={{
@@ -143,19 +139,17 @@ export default function HeroIntro({ hero, onFinish }) {
           duration: 0.8,
         }}
         style={{
-          marginTop: "35px",
+          marginTop: isMobile ? "20px" : "35px",
           color: "#F7E0A1",
           fontFamily: "Cinzel",
-          fontSize: "72px",
-          letterSpacing: "8px",
+          fontSize: isMobile ? "44px" : "72px",
+          letterSpacing: isMobile ? "4px" : "8px",
           textShadow:
             "0 0 20px rgba(255,220,120,.6)",
         }}
       >
         {hero.toUpperCase()}
       </motion.h1>
-
-      {/* Hero Quote */}
 
       <motion.h2
         initial={{
@@ -172,13 +166,16 @@ export default function HeroIntro({ hero, onFinish }) {
         }}
         style={{
           color: "#dddddd",
-          fontSize: "28px",
+          fontSize: isMobile ? "20px" : "28px",
           letterSpacing: "2px",
           fontFamily: "Cinzel",
+          textAlign: "center",
+          padding: "0 20px",
         }}
       >
         "I am {hero}."
       </motion.h2>
+
     </motion.div>
   );
 }
