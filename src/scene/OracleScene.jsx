@@ -33,11 +33,12 @@ function OracleScene({ onIntroFinished }) {
         height: "100vh",
       }}
       shadows
-      dpr={[1, 2]}
+      dpr={isMobile ? 1 : [1, 2]}
       gl={{
-        antialias: true,
+        antialias: !isMobile,
+        powerPreference: "high-performance",
         toneMapping: THREE.ACESFilmicToneMapping,
-        toneMappingExposure: 0.9,
+        toneMappingExposure: isMobile ? 0.75 : 0.9,
       }}
     >
       {/* Camera */}
@@ -45,25 +46,27 @@ function OracleScene({ onIntroFinished }) {
         makeDefault
         position={
           isMobile
-            ? [0, 58, -245] // Mobile
-            : [0, 54, -185] // Desktop
+            ? [0, 58, -245]
+            : [0, 54, -185]
         }
         fov={isMobile ? 42 : 35}
       />
 
       {/* HDRI */}
-      <Environment
-        files="/hdri/night.exr"
-        background
-      />
+      {!isMobile && (
+        <Environment
+          files="/hdri/night.exr"
+          background
+        />
+      )}
 
       {/* Galaxy */}
-      <Galaxy />
+      {!isMobile && <Galaxy />}
 
       {/* Lights */}
 
       <ambientLight
-        intensity={0.35}
+        intensity={isMobile ? 0.45 : 0.35}
         color="#bfcfff"
       />
 
@@ -79,8 +82,8 @@ function OracleScene({ onIntroFinished }) {
         intensity={1.2}
         color="#dbe7ff"
         castShadow
-        shadow-mapSize-width={4096}
-        shadow-mapSize-height={4096}
+        shadow-mapSize-width={isMobile ? 1024 : 4096}
+        shadow-mapSize-height={isMobile ? 1024 : 4096}
         shadow-camera-near={1}
         shadow-camera-far={300}
         shadow-camera-left={-80}
@@ -92,7 +95,7 @@ function OracleScene({ onIntroFinished }) {
       {/* Oracle Golden Glow */}
       <pointLight
         position={[0, 12, 0]}
-        intensity={6}
+        intensity={isMobile ? 2.5 : 6}
         color="#FFD977"
         distance={50}
         decay={2}
@@ -102,7 +105,7 @@ function OracleScene({ onIntroFinished }) {
       <Moon />
 
       {/* Oracle Particles */}
-      <OracleMagic />
+      {!isMobile && <OracleMagic />}
 
       {/* Temple */}
       <Temple />
@@ -132,14 +135,16 @@ function OracleScene({ onIntroFinished }) {
         />
       )}
 
-      {/* Bloom */}
-      <EffectComposer>
-        <Bloom
-          intensity={1.15}
-          luminanceThreshold={0.45}
-          mipmapBlur
-        />
-      </EffectComposer>
+      {/* Bloom - Desktop Only */}
+      {!isMobile && (
+        <EffectComposer>
+          <Bloom
+            intensity={1.15}
+            luminanceThreshold={0.45}
+            mipmapBlur
+          />
+        </EffectComposer>
+      )}
 
     </Canvas>
   );
